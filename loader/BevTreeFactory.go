@@ -4,16 +4,15 @@ import (
 	_ "fmt"
 	_ "reflect"
 
-	b3 "github.com/magicsea/behavior3go"
-	. "github.com/magicsea/behavior3go/actions"
-	. "github.com/magicsea/behavior3go/composites"
-	. "github.com/magicsea/behavior3go/config"
-	. "github.com/magicsea/behavior3go/core"
-	. "github.com/magicsea/behavior3go/decorators"
+	. "github.com/tdkr/behavior3go/actions"
+	. "github.com/tdkr/behavior3go/composites"
+	. "github.com/tdkr/behavior3go/config"
+	. "github.com/tdkr/behavior3go/core"
+	. "github.com/tdkr/behavior3go/decorators"
 )
 
-func createBaseStructMaps() *b3.RegisterStructMaps {
-	st := b3.NewRegisterStructMaps()
+func createBaseStructMaps() *RegisterStructMaps {
+	st := NewRegisterStructMaps()
 	//actions
 	st.Register("Error", &Error{})
 	st.Register("Failer", &Failer{})
@@ -37,9 +36,8 @@ func createBaseStructMaps() *b3.RegisterStructMaps {
 	return st
 }
 
-func CreateBevTreeFromConfig(config *BTTreeCfg, extMap *b3.RegisterStructMaps) *BehaviorTree {
-	baseMaps := createBaseStructMaps()
+func CreateBevTreeFromConfig(config *BTTreeCfg, extMap *RegisterStructMaps) *BehaviorTree {
 	tree := NewBeTree()
-	tree.Load(config, baseMaps, extMap)
+	tree.Load(config, extMap)
 	return tree
 }

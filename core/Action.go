@@ -1,8 +1,8 @@
 package core
 
 import (
-	b3 "github.com/magicsea/behavior3go"
-	. "github.com/magicsea/behavior3go/config"
+	b3 "github.com/tdkr/behavior3go"
+	. "github.com/tdkr/behavior3go/config"
 )
 
 type IAction interface {
@@ -39,6 +39,4 @@ func (this *Action) Initialize(params *BTNodeCfg) {
 	//this.id = b3.CreateUUID()
 	this.BaseNode.Initialize(params)
 	//this.BaseNode.IBaseWorker = this
-	this.parameters = make(map[string]interface{})
-	this.properties = make(map[string]interface{})
 }

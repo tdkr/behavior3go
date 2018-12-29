@@ -3,8 +3,8 @@ package core
 import (
 	"fmt"
 
-	b3 "github.com/magicsea/behavior3go"
-	"github.com/magicsea/behavior3go/config"
+	b3 "github.com/tdkr/behavior3go"
+	"github.com/tdkr/behavior3go/config"
 )
 
 /**
@@ -115,6 +115,10 @@ type BehaviorTree struct {
 	dumpInfo *config.BTTreeCfg
 }
 
+type IBevTreeFactory interface {
+	CreateNode(id string) IBaseNode
+}
+
 func NewBeTree() *BehaviorTree {
 	tree := &BehaviorTree{}
 	tree.Initialize()
@@ -171,7 +175,7 @@ func (this *BehaviorTree) SetDebug(debug interface{}) {
  * @param {Object} data The data structure representing a Behavior Tree.
  * @param {Object} [names] A namespace or dict containing custom nodes.
 **/
-func (this *BehaviorTree) Load(data *config.BTTreeCfg, maps *b3.RegisterStructMaps, extMaps *b3.RegisterStructMaps) {
+func (this *BehaviorTree) Load(data *config.BTTreeCfg, factory IBevTreeFactory) {
 	this.title = data.Title             //|| this.title;
 	this.description = data.Description // || this.description;
 	this.properties = data.Properties   // || this.properties;
@@ -182,20 +186,7 @@ func (this *BehaviorTree) Load(data *config.BTTreeCfg, maps *b3.RegisterStructMa
 
 	for id, s := range data.Nodes {
 		spec := &s
-		var node IBaseNode
-		if extMaps != nil && extMaps.CheckElem(spec.Name) {
-			// Look for the name in custom nodes
-			if tnode, err := extMaps.New(spec.Name); err == nil {
-				node = tnode.(IBaseNode)
-			}
-		} else {
-			if tnode, err2 := maps.New(spec.Name); err2 == nil {
-				node = tnode.(IBaseNode)
-			} else {
-				fmt.Println("new ", spec.Name, " err:", err2)
-			}
-		}
-
+		node := factory.CreateNode(spec.Name)
 		if node == nil {
 			// Invalid node name
 			panic("BehaviorTree.load: Invalid node name:" + spec.Name + ",title:" + spec.Title)
@@ -210,7 +201,7 @@ func (this *BehaviorTree) Load(data *config.BTTreeCfg, maps *b3.RegisterStructMa
 	// Connect the nodes
 	for id, spec := range data.Nodes {
 		node := nodes[id]
-
+		//fmt.Println("BehaviorTree.Load", id, node.GetName(), node.GetCategory())
 		if node.GetCategory() == b3.COMPOSITE && spec.Children != nil {
 			for i := 0; i < len(spec.Children); i++ {
 				var cid = spec.Children[i]
@@ -261,7 +252,7 @@ func (this *BehaviorTree) dump() *config.BTTreeCfg {
  * @param {Blackboard} blackboard An instance of blackboard object.
  * @return {Constant} The tick signal state.
 **/
-func (this *BehaviorTree) Tick(target interface{}, blackboard *Blackboard) b3.Status {
+func (this *BehaviorTree) Tick(target interface{}, blackboard *Blackboard, args ...interface{}) b3.Status {
 	if blackboard == nil {
 		panic("The blackboard parameter is obligatory and must be an instance of b3.Blackboard")
 	}
@@ -272,6 +263,7 @@ func (this *BehaviorTree) Tick(target interface{}, blackboard *Blackboard) b3.St
 	tick.target = target
 	tick.Blackboard = blackboard
 	tick.tree = this
+	tick.args = args
 
 	/* TICK NODE */
 	var state = this.root._execute(tick)

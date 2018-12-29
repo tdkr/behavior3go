@@ -5,12 +5,12 @@ import (
 	"reflect"
 	"testing"
 
-	b3 "github.com/magicsea/behavior3go"
-	//. "github.com/magicsea/behavior3go/actions"
-	//. "github.com/magicsea/behavior3go/composites"
-	. "github.com/magicsea/behavior3go/config"
-	. "github.com/magicsea/behavior3go/core"
-	//. "github.com/magicsea/behavior3go/decorators"
+	b3 "github.com/tdkr/behavior3go"
+	//. "github.com/tdkr/behavior3go/actions"
+	//. "github.com/tdkr/behavior3go/composites"
+	. "github.com/tdkr/behavior3go/config"
+	. "github.com/tdkr/behavior3go/core"
+	//. "github.com/tdkr/behavior3go/decorators"
 )
 
 type Test struct {
@@ -52,7 +52,7 @@ func TestLoadTree(t *testing.T) {
 	treeConfig, ok := LoadTreeCfg("tree.json")
 	if ok {
 		//自定义节点注册
-		maps := b3.NewRegisterStructMaps()
+		maps := createBaseStructMaps()
 		maps.Register("Log", new(LogTest))
 
 		//载入

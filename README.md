@@ -10,10 +10,10 @@ golang behavior tree,from http://behavior3.com
 在loader文件夹里，参考loader_test.go。  
 通过tree.json文件与编辑器关联，可使用编辑器导入导出此文件内容。
 ## 完整示例
-[io类游戏示例](https://github.com/magicsea/h5game/tree/master/server)  
+[io类游戏示例](https://github.com/tdkr/h5game/tree/master/server)  
 bin/b3.json为行为树的数据，在编辑器中导入树就可以还原工程，如图。  
 
-![image](https://github.com/magicsea/behavior3go/blob/master/b3_simple1.png)
+![image](https://github.com/tdkr/behavior3go/blob/master/b3_simple1.png)
 
 ## 网页版编辑器本地搭建方法
 - 下载源码https://github.com/behavior3/behavior3editor到本地(工程目录)

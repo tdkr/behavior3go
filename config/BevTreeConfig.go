@@ -15,7 +15,6 @@ type BTNodeCfg struct {
 	Description string                 `json:"description"`
 	Children    []string               `json:"children"`
 	Child       string                 `json:"child"`
-	Parameters  map[string]interface{} `json:"parameters"`
 	Properties  map[string]interface{} `json:"properties"`
 }
 

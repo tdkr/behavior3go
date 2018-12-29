@@ -234,3 +234,10 @@ func (this *Blackboard) GetInt32(key, treeScope, nodeScope string) int32 {
 	}
 	return v.(int32)
 }
+func (this *Blackboard) GetString(key, treeScope, nodeScope string) string {
+	v := this.Get(key, treeScope, nodeScope)
+	if v == nil {
+		return ""
+	}
+	return v.(string)
+}
