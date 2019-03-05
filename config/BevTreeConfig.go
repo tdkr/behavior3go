@@ -72,18 +72,54 @@ type BTTreeCfg struct {
 //加载
 func LoadTreeCfg(path string) (*BTTreeCfg, bool) {
 
-	var tree BTTreeCfg
 	file, err := ioutil.ReadFile(path)
 	if err != nil {
 		fmt.Println("fail:", err)
 		return nil, false
 	}
+	var tree BTTreeCfg
 	err = json.Unmarshal(file, &tree)
 	if err != nil {
 		fmt.Println("fail, ummarshal:", err, len(file))
 		return nil, false
 	}
 
-	fmt.Println("load tree:", tree.Title, " nodes:", len(tree.Nodes))
+	for id, node := range tree.Nodes {
+		if node.Id == "" {
+			node.Id = id
+			tree.Nodes[id] = node
+		}
+	}
+
+	fmt.Println("load tree:", tree.Title, " nodes:", tree.Nodes)
 	return &tree, true
+}
+
+func LoadProjectCfg(path string) (map[string]*BTTreeCfg, bool) {
+
+	file, err := ioutil.ReadFile(path)
+	if err != nil {
+		fmt.Println("fail:", err)
+		return nil, false
+	}
+	var project = struct {
+		Trees []*BTTreeCfg `json:"trees"`
+	}{}
+	if err := json.Unmarshal(file, &project); err != nil {
+		return nil, false
+	}
+
+	treeMap := make(map[string]*BTTreeCfg)
+	for _, tree := range project.Trees {
+		treeMap[tree.Title] = tree
+
+		for id, node := range tree.Nodes {
+			if node.Id == "" {
+				node.Id = id
+				tree.Nodes[id] = node
+			}
+		}
+	}
+
+	return treeMap, true
 }

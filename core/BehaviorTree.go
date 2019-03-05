@@ -252,7 +252,7 @@ func (this *BehaviorTree) dump() *config.BTTreeCfg {
  * @param {Blackboard} blackboard An instance of blackboard object.
  * @return {Constant} The tick signal state.
 **/
-func (this *BehaviorTree) Tick(target interface{}, blackboard *Blackboard, args ...interface{}) b3.Status {
+func (this *BehaviorTree) Tick(target interface{}, blackboard *Blackboard) b3.Status {
 	if blackboard == nil {
 		panic("The blackboard parameter is obligatory and must be an instance of b3.Blackboard")
 	}
@@ -263,7 +263,6 @@ func (this *BehaviorTree) Tick(target interface{}, blackboard *Blackboard, args 
 	tick.target = target
 	tick.Blackboard = blackboard
 	tick.tree = this
-	tick.args = args
 
 	/* TICK NODE */
 	var state = this.root._execute(tick)
@@ -296,6 +295,11 @@ func (this *BehaviorTree) Tick(target interface{}, blackboard *Blackboard, args 
 
 func (this *BehaviorTree) Print() {
 	printNode(this.root, 0)
+}
+
+func (this *BehaviorTree) LastOpenNode(blackboard *Blackboard) IBaseNode {
+	var lastOpenNodes = blackboard._getTreeData(this.id).OpenNodes
+	return lastOpenNodes[len(lastOpenNodes)-1]
 }
 
 func printNode(root IBaseNode, blk int) {

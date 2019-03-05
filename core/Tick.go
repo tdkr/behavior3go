@@ -63,13 +63,6 @@ type Tick struct {
 	 * @readOnly
 	**/
 	_nodeCount int
-
-	/**
-	 * The tick args.
-	 * @property {[]Interface} target
-	 * @readOnly
-	**/
-	args []interface{}
 }
 
 func NewTick() *Tick {
@@ -161,8 +154,4 @@ func (this *Tick) _exitNode(node *BaseNode) {
 
 func (this *Tick) GetTarget() interface{} {
 	return this.target
-}
-
-func (this *Tick) GetArgs() []interface{} {
-	return this.args
 }
